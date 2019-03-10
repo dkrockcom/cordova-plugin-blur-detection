@@ -1,0 +1,21 @@
+allprojects {
+    repositories {
+        jcenter()
+        flatDir {
+            dirs 'libs'
+        }
+        mavenLocal()
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs') //Should use implementation instead of complie if use latest cordova android platform 
+    compile (name: 'opencv-release', ext: 'aar')
+}
+
+android {
+  packagingOptions {
+    exclude 'META-INF/NOTICE'
+    exclude 'META-INF/LICENSE'
+  }
+}

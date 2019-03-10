@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
+           id="cordova-plugin-blur-detection"
+      version="0.0.1">
+    <name>blur-image-detection</name>
+
+    <js-module src="www/template.js" name="BlurDetect">
+        <clobbers target="BlurDetect" />
+    </js-module>
+
+    <!-- android -->  
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="BlurDetectPlugin" >
+                <param name="android-package" value="org.apache.cordova.blurdetect.BlurDetectPlugin"/>
+            </feature>
+        </config-file>
+
+        <!-- <resource-file src="src/android/libs/opencv-release.aar" target="libs/opencv-release.aar" /> -->
+        <lib-file src="src/android/libs/opencv-release.aar" target-dir="../../../../../libs" />
+        <source-file src="src/android/BlurDetectPlugin.java" target-dir="src/org/apache/cordova/blurdetect" />
+        <framework custom="true" src="src/android/cordova-plugin-blur-detection.gradle" type="gradleReference" />
+
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        </config-file>
+        
+    </platform>
+</plugin>
