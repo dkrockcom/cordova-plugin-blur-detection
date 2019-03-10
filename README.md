@@ -1,6 +1,5 @@
-###############################
 # cordova-plugin-blur-detection
-###############################
+
 
 Plugin for the identify blurred image.
 
@@ -15,6 +14,11 @@ Temporary Installation Steps
 
 Example: cordova plugin add d:/cordova-plugin-blur-detection
 
+Plugin Release on NPM Soon then after we can use install command like: 
+
+```
+cordova plugin add cordova-plugin-blur-detection
+```
 
 **********************
 Sample Implementation.
