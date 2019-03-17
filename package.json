@@ -1,7 +1,7 @@
 {
     "name": "cordova-plugin-blur-detection",
     "description": "cordova plugin for identify blurred image",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "repository": {
         "type": "git",
         "url": "https://github.com/dkrockcom/cordova-plugin-blur-detection"
