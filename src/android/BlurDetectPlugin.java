@@ -44,7 +44,7 @@ public class BlurDetectPlugin extends CordovaPlugin {
         String imageUri = args.getString(0);
         _imageUri = imageUri;
         _callbackContext = callbackContext;
-        if (action.equals("chcekImage")) {
+        if (action.equals("checkImage")) {
             imageProcess();
         } else {
             return false;

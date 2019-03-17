@@ -5,8 +5,8 @@ var exec = cordova.require('cordova/exec'),
     utils = cordova.require('cordova/utils');
 
 var template = {
-    chcekImage: function(successCallback, errorCallback, message, forceAsync) {
-        var action = 'chcekImage';
+    checkImage: function(successCallback, errorCallback, message, forceAsync) {
+        var action = 'checkImage';
 
         if (forceAsync) {
             action += 'Async';
