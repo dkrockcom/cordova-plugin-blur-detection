@@ -1,21 +1,18 @@
 {
-    "name": "PLUGIN_LOWER_NAME",
-    "description": "",
-    "version": "1.0.1",
-    "homepage": "",
+    "name": "cordova-plugin-blur-detection",
+    "description": "cordova plugin for identify blurred image",
+    "version": "1.0.2",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/dkrockcom/cordova-plugin-blur-detection"
     },
     "bugs": {
-        "url": ""
+        "url": "http://bugs.dkrock.com"
     },
     "cordova": {
         "id": "cordova-plugin-blur-detection",
         "platforms": [
-            "ios",
-            "android",
-            "windows"
+            "android"
         ]
     },
     "keywords": [
@@ -26,7 +23,7 @@
         "cordova" : ">=3.0.0"
     },
     "author": "",
-    "license": "PLUGIN_LICENSE",
+    "license": "GNU General Public License v2.0",
     "scripts": {
         "test": "jasmine-node --color spec"
     },

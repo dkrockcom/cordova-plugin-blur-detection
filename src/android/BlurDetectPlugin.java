@@ -84,7 +84,7 @@ public class BlurDetectPlugin extends CordovaPlugin {
             Core.meanStdDev(destination, median, std);
 
             double result = Math.pow(std.get(0, 0)[0], 2.0);
-            boolean isBlur = Math.round(result) > 50;
+            boolean isBlur = Math.round(result) > 85;
             _callbackContext.success(isBlur ? "BLUR" : "NOT BLUR");
         }
     }
