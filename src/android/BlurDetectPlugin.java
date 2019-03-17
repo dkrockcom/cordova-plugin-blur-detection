@@ -3,8 +3,11 @@ package org.apache.cordova.blurdetect;
 import org.apache.cordova.PermissionHelper;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfDouble;
+import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
 import org.apache.cordova.CallbackContext;
@@ -53,54 +56,36 @@ public class BlurDetectPlugin extends CordovaPlugin {
     }
 
     private void imageProcess() {
-        try {
-            File imgFile = new File(_imageUri);
-            if (!imgFile.exists()) {
-                _callbackContext.error("File not found : " + _imageUri);
-                return;
-            }
-            boolean writeExternalPermission = PermissionHelper.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (writeExternalPermission) {
-                Bitmap image = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inDither = true;
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                int l = CvType.CV_8UC1; //8-bit grey scale image
-                Mat matImage = new Mat();
-                Utils.bitmapToMat(image, matImage);
-                Mat matImageGrey = new Mat();
-                Imgproc.cvtColor(matImage, matImageGrey, Imgproc.COLOR_BGR2GRAY);
-                Bitmap destImage;
-                destImage = Bitmap.createBitmap(image);
-                Mat dst2 = new Mat();
-                Utils.bitmapToMat(destImage, dst2);
-                Mat laplacianImage = new Mat();
-                dst2.convertTo(laplacianImage, l);
-                Imgproc.Laplacian(matImageGrey, laplacianImage, CvType.CV_8U);
-                Mat laplacianImage8bit = new Mat();
-                laplacianImage.convertTo(laplacianImage8bit, l);
+        Mat image = Imgcodecs.imread(_imageUri, Imgcodecs.CV_LOAD_IMAGE_COLOR);
+        if (image.empty()) {
+            _callbackContext.error("CANNOT OPEN IMAGE!");
+        } else {
+            Mat destination = new Mat();
+            Mat matGray = new Mat();
+            Mat kernel = new Mat(3, 3, CvType.CV_32F) {
+                {
+                    put(0, 0, 0.0);
+                    put(0, 1, -1.0);
+                    put(0, 2, 0.0);
 
-                Bitmap bmp = Bitmap.createBitmap(laplacianImage8bit.cols(), laplacianImage8bit.rows(), Bitmap.Config.ARGB_8888);
-                Utils.matToBitmap(laplacianImage8bit, bmp);
-                int[] pixels = new int[bmp.getHeight() * bmp.getWidth()];
-                bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
-                int maxLap = -16777216; // 16m
+                    put(1, 0, -1.0);
+                    put(1, 1, 4.0);
+                    put(1, 2, -1.0);
 
-                for (int pixel : pixels) {
-                    if (pixel > maxLap)
-                        maxLap = pixel;
+                    put(2, 0, 0.0);
+                    put(2, 1, -1.0);
+                    put(2, 2, 0.0);
                 }
+            };
+            Imgproc.cvtColor(image, matGray, Imgproc.COLOR_BGR2GRAY);
+            Imgproc.filter2D(matGray, destination, -1, kernel);
+            MatOfDouble median = new MatOfDouble();
+            MatOfDouble std = new MatOfDouble();
+            Core.meanStdDev(destination, median, std);
 
-                int soglia = -6118750;
-                boolean isBlur = maxLap <= soglia;
-                _callbackContext.success(isBlur ? "BLUR" : "NOT BLUR");
-            }
-
-            if (!writeExternalPermission) {
-                PermissionHelper.requestPermission(this, WRITE_EXTERNAL_STORAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
-        } catch (Exception ex) {
-            _callbackContext.error(ex.toString());
+            double result = Math.pow(std.get(0, 0)[0], 2.0);
+            boolean isBlur = Math.round(result) > 50;
+            _callbackContext.success(isBlur ? "BLUR" : "NOT BLUR");
         }
     }
 

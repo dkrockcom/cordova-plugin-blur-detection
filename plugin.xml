@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
            id="cordova-plugin-blur-detection"
-      version="0.0.1">
+      version="1.0.1">
     <name>blur-image-detection</name>
 
     <js-module src="www/template.js" name="BlurDetect">
